@@ -38,7 +38,7 @@ def regresion_samples_a():
     return r
 
 
-n, N = 1000, 10
+n, N = 200, 1000
 allW = []
 
 # approximate target function
@@ -49,15 +49,15 @@ def regresion(samples, y):
     return np.linalg.pinv(samples).dot(y)
 
 
-def h_big(samples):
-    return [np.array([x0, x1, np.power(x2, 2), np.power(x3, 3), np.power(x4, 4), np.power(x5, 5)]) for
+def transformation(samples):
+    return [np.array([x0, x1, np.power(x2, 2), np.power(x3, 3)]) for
             x0, x1, x2, x3, x4, x5 in samples]
 
 
 for step in range(N):
     samples = generate_samples_e(n)
     y = target_function_all(samples)
-    samples = h_big(samples)
+    samples = transformation(samples)
     w = regresion(samples, y)
     allW.append(w)
 
@@ -69,22 +69,24 @@ bias_errors = []
 for step in range(N):
     samples = generate_samples_e(n)
     y = target_function_all(samples)
-    samples = h_big(samples)
+    samples = transformation(samples)
     gy = h_function(samples, avgW)
     bias_errors.append(np.power(np.subtract(gy, y), 2))
-print 'bias={}'.format(np.average(bias_errors))
+avgBias = np.average(bias_errors)
+print 'bias={}'.format(avgBias)
 
 # variance
 variance_errors = []
 for step in range(N):
     samples = generate_samples_e(n)
     y = target_function_all(samples)
-    samples = h_big(samples)
+    samples = transformation(samples)
     w = regresion(samples, y)
     gy = h_function(samples, avgW)
     hy = h_function(samples, w)
     variance_errors.append(np.power(np.subtract(gy, hy), 2))
-print 'variance={}'.format(np.average(variance_errors))
+avgVariance = np.average(variance_errors)
+print 'variance={}'.format(avgVariance)
 
-
+print 'Eout={}'.format(avgBias+avgVariance)
 
