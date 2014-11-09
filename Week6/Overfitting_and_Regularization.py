@@ -3,8 +3,8 @@ import time, random, numpy as np
 
 
 def load_data_from_file():
-    in_data = np.fromfile('/home/punki/PycharmProjects/LearningFromData/LinearRegresion/Week6/in.dta', float, -1, '   ')
-    out_data = np.fromfile('/home/punki/PycharmProjects/LearningFromData/LinearRegresion/Week6/out.dta', float, -1,
+    in_data = np.fromfile('./in.dta', float, -1, '   ')
+    out_data = np.fromfile('./out.dta', float, -1,
                            '   ')
     sample_in = in_data.reshape(-1, 3)
     sample_out = out_data.reshape(-1, 3)
