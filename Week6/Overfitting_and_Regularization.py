@@ -3,8 +3,8 @@ import time, random, numpy as np
 
 
 def load_data_from_file():
-    sample_in = (np.fromfile('in.dta', float, -1, '   ')).reshape(-1, 3)
-    sample_out = (np.fromfile('out.dta', float, -1, '   ')).reshape(-1, 3)
+    sample_in = (np.fromfile('in.dta', float, -1, ' ')).reshape(-1, 3)
+    sample_out = (np.fromfile('out.dta', float, -1, ' ')).reshape(-1, 3)
     return sample_in, sample_out
 
 
