@@ -70,7 +70,7 @@ def logistic_regression(number_of_samples, repeat=100, learning_rate=0.01):
                 break
             w = new_w
             iter += 1
-            out_sample_size = number_of_samples * 10.0
+            out_sample_size = number_of_samples * 100.0
         iters+=iter
         errors.append(compute_error(out_sample_size, dimension, w, target_function)/out_sample_size)
 
