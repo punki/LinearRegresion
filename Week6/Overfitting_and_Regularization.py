@@ -42,7 +42,6 @@ def linearRegresion(s_in, s_out, learn_w_function):
 
 
 def with_regularization_function(x, y):
-    k = 3
     lambda_value = 10 ** k
     a1 = x.T.dot(x)
     a2 = lambda_value * np.identity(len(a1))
@@ -54,6 +53,17 @@ def with_regularization_function(x, y):
 s_in, s_out = load_data_from_file()
 # ex 2
 without_regularization = (lambda x, y: np.linalg.pinv(x).dot(y))
-
 print('without_regularization (e_in, e_out): {}'.format(linearRegresion(s_in, s_out, without_regularization)))
-print('with_regularization (e_in, e_out): {}'.format(linearRegresion(s_in, s_out, with_regularization_function)))
+
+# with regularization
+for k in range(-2, 3):
+    print('with_regularization k={} (e_in, e_out): {}'
+          .format(k, linearRegresion(s_in, s_out, with_regularization_function)))
+
+#  ex 6
+all_e_out = []
+for k in range(-7, 8):
+    e_out = linearRegresion(s_in, s_out, with_regularization_function)[1]
+    print('k={} eout={}'.format(k,e_out))
+    all_e_out.append(e_out)
+print 'min eout={}'.format(min(all_e_out))
