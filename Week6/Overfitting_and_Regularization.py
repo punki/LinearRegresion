@@ -3,8 +3,8 @@ import time, random, numpy as np
 
 
 def load_data_from_file():
-    sample_in = (np.fromfile('in.dta', float, -1, ' ')).reshape(-1, 3)
-    sample_out = (np.fromfile('out.dta', float, -1, ' ')).reshape(-1, 3)
+    sample_in = np.fromfile('in.dta', float, -1, ' ').reshape(-1, 3)
+    sample_out = np.fromfile('out.dta', float, -1, ' ').reshape(-1, 3)
     return sample_in, sample_out
 
 
@@ -26,14 +26,14 @@ def transformation(data):
     return np.array(newData)
 
 
-def linearRegresion(s_in, s_out):
+def linearRegresion(s_in, s_out, learn_w_function):
     s_in_t = transformation(s_in)
     s_in_y = s_in[:, 2:3]
 
     s_out_t = transformation(s_out)
     s_out_y = s_out[:, 2:3]
 
-    w = np.linalg.pinv(s_in_t).dot(s_in_y)
+    w = learn_w_function(s_in_t, s_in_y)
     h_in_class = map(lambda e: 1 if e >= 0 else -1, s_in_t.dot(w))
     h_out_class = map(lambda e: 1 if e >= 0 else -1, (s_out_t).dot(w))
     e_in = countDiffElements(h_in_class, s_in_y) / float(len(s_in))
@@ -41,5 +41,19 @@ def linearRegresion(s_in, s_out):
     return e_in, e_out
 
 
+def with_regularization_function(x, y):
+    k = 3
+    lambda_value = 10 ** k
+    a1 = x.T.dot(x)
+    a2 = lambda_value * np.identity(len(a1))
+    a3 = a1 + a2
+    b1 = x.T.dot(y)
+    return np.linalg.inv(a3).dot(b1)
+
+
 s_in, s_out = load_data_from_file()
-print(linearRegresion(s_in, s_out))
+# ex 2
+without_regularization = (lambda x, y: np.linalg.pinv(x).dot(y))
+
+print('without_regularization (e_in, e_out): {}'.format(linearRegresion(s_in, s_out, without_regularization)))
+print('with_regularization (e_in, e_out): {}'.format(linearRegresion(s_in, s_out, with_regularization_function)))
