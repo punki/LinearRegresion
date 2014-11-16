@@ -32,7 +32,7 @@ def linearRegresion(s_in, s_in_y, s_out, s_out_y, learn_w_function):
     h_out_class = map(lambda e: 1 if e >= 0 else -1, (s_out).dot(w))
     e_in = countDiffElements(h_in_class, s_in_y) / float(len(s_in))
     e_out = countDiffElements(h_out_class, s_out_y) / float(len(s_out))
-    return e_in, e_out
+    return e_in, e_out, 1
 
 
 def with_regularization_function(x, y):
@@ -52,10 +52,47 @@ s_train = s_in[0:25]
 s_val = s_in[25:35]
 
 for k in range(3, 8):
-    s_train_t = transformation(s_train)[:, 0:k+1]
-    s_val_t = transformation(s_val)[:, 0:k+1]
-    print('model selection k={} (e_in, e_out): {}'.format(
-        k, linearRegresion(s_train_t, s_train[:, 2:3], s_val_t, s_val[:, 2:3], without_regularization)))
+    # limit model, k+1 because we are choosing from Q0...Qk
+    s_train_t = transformation(s_train)[:, 0:k + 1]
+    s_val_t = transformation(s_val)[:, 0:k + 1]
+    s_out_t = transformation(s_out)[:, 0:k + 1]
+    print('model selection k={} (e_train, e_val): {} out-of-sample error={}'.format(
+        k,
+        linearRegresion(s_train_t, s_train[:, 2:3], s_val_t, s_val[:, 2:3], without_regularization),
+        linearRegresion(s_train_t, s_train[:, 2:3], s_out_t, s_out[:, 2:3], without_regularization)[1]))
 
 
 
+# ex 3
+print('Ex 3')
+for k in range(3, 8):
+    # limit model, k+1 because we are choosing from Q0...Qk
+    s_train_t = transformation(s_train)[:, 0:k + 1]
+    s_val_t = transformation(s_val)[:, 0:k + 1]
+    s_out_t = transformation(s_out)[:, 0:k + 1]
+    print('model selection k={} (e_train, e_val): {} out-of-sample error={}'.format(
+        k,
+        linearRegresion(s_val_t, s_val[:, 2:3], s_train_t, s_train[:, 2:3], without_regularization),
+        linearRegresion(s_val_t, s_val[:, 2:3], s_out_t, s_out[:, 2:3], without_regularization)[1]))
+
+print('ex 7 cross validation')
+
+# check two models h(for k==0)(x) = b  and h(for k==1)(x) = ax + b
+for p in {1, 2, 3}:
+    s_in = np.array([[-1, 0], [p, 1], [1, 0]])
+    sqr_error_out_for_models = []
+    for k in range(0, 1):
+        # leave one out cross validation
+        sqr_error_out_for_model = []
+        for val_idx, s_val in enumerate(s_in):
+            s_in_head = s_in[0:val_idx]
+            s_in_tail = s_in[val_idx + 1:]
+            s_train = np.concatenate((s_in_head, s_in_tail))
+            s_train_t = transformation(s_train)[:, 0:k + 1]
+            s_val_t = transformation(s_val)[:, 0:k + 1]
+            sqr_e_out = linearRegresion(s_train_t, s_train[:, 1:2], s_val_t, s_val[:, 1:2], without_regularization)[2]
+            sqr_error_out_for_model.append(sqr_e_out)
+        avg_sqr_error_model = np.average(sqr_error_out_for_model)
+        sqr_error_out_for_models.append(avg_sqr_error_model)
+        print 'for k={} e={} avg_e={}'.format(k, sqr_error_out_for_model, avg_sqr_error_model)
+    print 'sqr_error_out_for_model={}'.format(sqr_error_out_for_model)
