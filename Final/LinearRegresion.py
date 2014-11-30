@@ -8,7 +8,7 @@ class LinearRegresion:
         self.w = []
 
     def fit(self, training_data_set):
-        x = training_data_set.get_x()
+        x = np.array([self.transofrmation(z[0],z[1]) for z in training_data_set.get_x()])
         y = training_data_set.get_y()
         a1 = x.T.dot(x)
         a2 = self.reg_lambda * np.identity(len(a1))
@@ -17,6 +17,7 @@ class LinearRegresion:
         self.w = np.linalg.inv(a3).dot(b1)
 
     def error(self, data_set):
-        predicted = [1 if x>=0 else -1 for x in data_set.get_x().dot(self.w)]
+        t_x = np.array([self.transofrmation(z[0],z[1]) for z in data_set.get_x()])
+        predicted = [1 if x>=0 else -1 for x in t_x.dot(self.w)]
         correct = data_set.get_y()
         return len(correct[correct != predicted])/float(len(correct))
