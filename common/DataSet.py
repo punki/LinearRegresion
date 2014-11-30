@@ -25,8 +25,8 @@ class DataSet:
     def get_y(self):
         return self.y
 
-    def new_n_versus_all(self, n_classes):
+    def new_one_versus_all(self, one):
         new_data = np.copy(self.data)
         for d in new_data:
-            d[self.classColumn] = -1 if d[self.classColumn] not in n_classes else 1
+            d[self.classColumn] = 1 if d[self.classColumn] == one else -1
         return DataSet(data=new_data)
