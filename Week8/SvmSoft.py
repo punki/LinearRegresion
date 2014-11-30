@@ -22,8 +22,8 @@ for one in {1, 5}:
     for C in {0.0001,0.001, 0.01, 0.1, 1}:
         q=5
         clf = svm.SVC(kernel='poly', C=C, degree=q)
-        training_one_versus = training_data_set.new_one_versus_all(one)
-        test_one_versus = test_data_set.new_one_versus_all(one)
+        training_one_versus = training_data_set.one_versus_all(one)
+        test_one_versus = test_data_set.one_versus_all(one)
         clf.fit(training_one_versus.get_x(), training_one_versus.get_y())
 
         e_in = compute_error(clf, training_one_versus.get_x(), training_one_versus.get_y())
