@@ -30,3 +30,13 @@ class DataSet:
         for d in new_data:
             d[self.classColumn] = 1 if d[self.classColumn] == one else -1
         return DataSet(data=new_data)
+
+    def one_versus_one(self,one,versus):
+        new_data = []
+        for z in self.data:
+            if z[self.classColumn] in {one, versus}:
+                new_z = np.copy(z)
+                new_z[self.classColumn] = 1 if z[self.classColumn] == one else -1
+                new_data.append(new_z)
+        return DataSet(data=np.array(new_data))
+
