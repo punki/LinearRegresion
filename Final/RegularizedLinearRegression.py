@@ -1,7 +1,8 @@
+
 __author__ = 'punki'
 
-from Final.LinearRegresion import LinearRegresion
 from common.DataSet import DataSet
+from common.LinearRegresion import LinearRegresion
 import time, random, numpy as np
 from sklearn import svm
 

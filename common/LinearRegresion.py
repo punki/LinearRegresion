@@ -1,4 +1,6 @@
-import time, random, numpy as np
+import numpy as np
+
+__author__ = 'punki'
 
 
 class LinearRegresion:
